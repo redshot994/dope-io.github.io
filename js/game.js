@@ -53,29 +53,32 @@ function init(){
 // Update game objects
 var update = function (modifier) {
 	//player movement
+	//var delta = (hero.speed * modifier);
 	if (87 in keysDown) { // Player holding w
-		hero.y -= hero.speed * modifier;
-		if(cantMove()){
-			hero.y += hero.speed * modifier;
+		if(hero.ay > -(hero.accMax * modifier)){
+			hero.ay -= hero.accRate * modifier;
 		}
 	}
 	if (83 in keysDown) { // Player holding s
-		hero.y += hero.speed * modifier;
-		if(cantMove()){
-			hero.y -= hero.speed * modifier;
+		if(hero.ay < (hero.accMax * modifier)){
+			hero.ay += hero.accRate * modifier;
 		}
 	}
 	if (65 in keysDown) { // Player holding a
-		hero.x -= hero.speed * modifier;
-		if(cantMove()){
-			hero.x += hero.speed * modifier;
+		if(hero.ax > -(hero.accMax * modifier)){
+			hero.ax -= hero.accRate * modifier;
 		}
 	}
 	if (68 in keysDown) { // Player holding d
-		hero.x += hero.speed * modifier;
-		if(cantMove()){
-			hero.x -= hero.speed * modifier;
+		if(hero.ax < (hero.accMax * modifier)){
+			hero.ax += hero.accRate * modifier;
 		}
+	}
+	if (!(87 in keysDown || 83 in keysDown)) {
+		hero.ay = 0;
+	}
+	if (!(65 in keysDown || 68 in keysDown)) {
+		hero.ax = 0;
 	}
 
 	//bullets
@@ -99,6 +102,7 @@ var update = function (modifier) {
 			shootBullet(0);
 		}
 	}
+	updatePlayerPosition(hero, modifier);
 	coolDown();
 	updateBullets();
 };
@@ -203,22 +207,6 @@ function renderMap(camX, camY){
 	ctx.fillRect(canvas.width - bgWidth - 10 + heroMapx - camX, canvas.height - bgHeight - 10 + heroMapy - camY, 2, 2);
 }
 
-function renderPlayer(){
-	//player
-	ctx.fillStyle = "rgb(150, 255, 150)";
-	ctx.strokeStyle = "rgb(60, 60, 60)";
-	ctx.lineWidth = 5;
-	//ctx.fillOval(hero.x, hero.y, hero.width, hero.height);
-	ctx.beginPath();
-	ctx.arc(hero.x, hero.y, 20, 0, Math.PI*2, true); 
-	ctx.closePath();
-	ctx.fill();
-	ctx.stroke();
-	//gun
-	//ctx.fillStyle = "rgb(50, 50, 50)";
-	//fillRotatedRect((hero.x + hero.width/2) - 10, (hero.y + hero.height/2) - 5, 20, 10, gun.angle);
-}
-
 function renderBullets(){
 	for(var i = 0; i < bullets.length; i++){
 		renderBullet(bullets[i], ctx);
@@ -264,8 +252,17 @@ requestAnimationFrame = w.requestAnimationFrame
 // Let's play this game!
 hero.x = 1500;
 hero.y = 1500;
-var temp = new bullet(1200, 1200, 8, 5, 90, 5);
+
+//hero.friends.push(new friend(hero.x-40, hero.y-40, 12, hero));
 
 var then = Date.now();
 init();
 main();
+
+
+
+
+
+
+
+
