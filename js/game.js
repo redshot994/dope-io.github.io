@@ -77,8 +77,8 @@ var update = function (modifier) {
 			hero.x -= hero.speed * modifier;
 		}
 	}
+
 	//bullets
-	
 	if (38 in keysDown) { // Player holding up
 		if(canShoot()){
 			shootBullet(270);
@@ -169,11 +169,17 @@ function renderBackground(camX, camY){
 	ctx.fillRect(0, 0, bgWidth * bgGridSize, bgHeight * bgGridSize);
 	ctx.strokeStyle = "rgb(190, 190, 190)";
 	ctx.lineWidth = 2;
+	ctx.beginPath();
 	for(var i = 0; i < bgWidth; i++){
-		for(var j = 0; j < bgHeight; j++){
-			ctx.strokeRect(i * bgGridSize, j * bgGridSize, bgGridSize, bgGridSize);
-		}
+		ctx.moveTo(0, i * bgGridSize);
+		ctx.lineTo(bgGridSize * bgWidth, i * bgGridSize);
 	}
+	for(var i = 0; i < bgWidth; i++){
+		ctx.moveTo(i * bgGridSize, 0);
+		ctx.lineTo(i * bgGridSize, bgGridSize * bgWidth);
+	}
+	ctx.stroke();
+	
 }
 
 function getAngle(cx, cy, ex, ey) {
