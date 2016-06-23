@@ -52,31 +52,86 @@ function init(){
 
 // Update game objects
 var update = function (modifier) {
-	if (38 in keysDown || 87 in keysDown) { // Player holding up or w
+	//player movement
+	if (87 in keysDown) { // Player holding w
 		hero.y -= hero.speed * modifier;
 		if(cantMove()){
 			hero.y += hero.speed * modifier;
 		}
 	}
-	if (40 in keysDown || 83 in keysDown) { // Player holding down or s
+	if (83 in keysDown) { // Player holding s
 		hero.y += hero.speed * modifier;
 		if(cantMove()){
 			hero.y -= hero.speed * modifier;
 		}
 	}
-	if (37 in keysDown || 65 in keysDown) { // Player holding left or a
+	if (65 in keysDown) { // Player holding a
 		hero.x -= hero.speed * modifier;
 		if(cantMove()){
 			hero.x += hero.speed * modifier;
 		}
 	}
-	if (39 in keysDown || 68 in keysDown) { // Player holding right or d
+	if (68 in keysDown) { // Player holding d
 		hero.x += hero.speed * modifier;
 		if(cantMove()){
 			hero.x -= hero.speed * modifier;
 		}
 	}
+	//bullets
+	
+	if (38 in keysDown) { // Player holding up
+		if(canShoot()){
+			shootBullet(270);
+		}
+	}
+	if (40 in keysDown) { // Player holding down
+		if(canShoot()){
+			shootBullet(90);
+		}
+	}
+	if (37 in keysDown) { // Player holding left
+		if(canShoot()){
+			shootBullet(180);
+		}
+	}
+	if (39 in keysDown) { // Player holding right
+		if(canShoot()){
+			shootBullet(0);
+		}
+	}
+	coolDown();
+	updateBullets();
 };
+
+var shootCoolDown = 0;
+var delay = 40;
+var bullets = new Array();
+
+function coolDown(){
+	if(shootCoolDown > 0){
+		shootCoolDown--;
+	}
+}
+
+function canShoot(){
+	if(shootCoolDown == 0){
+		return true;
+	}
+	else{
+		return false;
+	}
+}
+
+function shootBullet(angle){
+	bullets.push(new bullet(hero.x, hero.y, 8, 5, angle, 50));
+	shootCoolDown = delay;
+}
+
+function updateBullets(){
+	for(var i = 0; i < bullets.length; i++){
+		moveBullet(bullets[i]);
+	}
+}
 
 function cantMove(){
 	return false;
@@ -105,6 +160,7 @@ function render() {
 	renderBackground(camX, camY);
 	renderPlayer();
 	renderMap(camX, camY);
+	renderBullets();
 	//etc
 };
 
@@ -157,6 +213,12 @@ function renderPlayer(){
 	//fillRotatedRect((hero.x + hero.width/2) - 10, (hero.y + hero.height/2) - 5, 20, 10, gun.angle);
 }
 
+function renderBullets(){
+	for(var i = 0; i < bullets.length; i++){
+		renderBullet(bullets[i], ctx);
+	}
+}
+
 function fillRotatedRect(x, y, width, height, deg){
     //Convert degrees to radian 
     var rad = (deg + 90) * Math.PI / 180;
@@ -194,8 +256,10 @@ requestAnimationFrame = w.requestAnimationFrame
 					 || w.mozRequestAnimationFrame;
 
 // Let's play this game!
-hero.x = canvas.width/2;
-hero.y = canvas.height/2;
+hero.x = 1500;
+hero.y = 1500;
+var temp = new bullet(1200, 1200, 8, 5, 90, 5);
+
 var then = Date.now();
 init();
 main();
