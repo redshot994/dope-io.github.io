@@ -53,69 +53,46 @@ function init(){
 // Update game objects
 var update = function (modifier) {
 	//player movement
-	//var delta = (hero.speed * modifier);
 	if (87 in keysDown) { // Player holding w
-		if(hero.ay > -(hero.accMax * modifier)){
-			hero.ay -= hero.accRate * modifier;
-		}
+		acceleratePlayer(0, -1, hero, modifier);
 	}
 	if (83 in keysDown) { // Player holding s
-		if(hero.ay < (hero.accMax * modifier)){
-			hero.ay += hero.accRate * modifier;
-		}
+		acceleratePlayer(0, 1, hero, modifier);
 	}
 	if (65 in keysDown) { // Player holding a
-		if(hero.ax > -(hero.accMax * modifier)){
-			hero.ax -= hero.accRate * modifier;
-		}
+		acceleratePlayer(-1, 0, hero, modifier);
 	}
 	if (68 in keysDown) { // Player holding d
-		if(hero.ax < (hero.accMax * modifier)){
-			hero.ax += hero.accRate * modifier;
-		}
+		acceleratePlayer(1, 0, hero, modifier);
 	}
 	if (!(87 in keysDown || 83 in keysDown)) {
-		hero.ay = 0;
+		decceleratePlayer(false, hero);
 	}
 	if (!(65 in keysDown || 68 in keysDown)) {
-		hero.ax = 0;
+		decceleratePlayer(true, hero);
 	}
 
 	//bullets
 	if (38 in keysDown) { // Player holding up
-		if(canShoot()){
-			shootBullet(270);
-		}
+		playerShootBullet(hero, 270);
 	}
 	if (40 in keysDown) { // Player holding down
-		if(canShoot()){
-			shootBullet(90);
-		}
+		playerShootBullet(hero, 90);
 	}
 	if (37 in keysDown) { // Player holding left
-		if(canShoot()){
-			shootBullet(180);
-		}
+		playerShootBullet(hero, 180);
 	}
 	if (39 in keysDown) { // Player holding right
-		if(canShoot()){
-			shootBullet(0);
-		}
+		playerShootBullet(hero, 0);
 	}
-	updatePlayerPosition(hero, modifier);
-	coolDown();
+	updatePlayerPosition(hero);
+	playerCoolDown(hero);
 	updateBullets();
 };
 
 var shootCoolDown = 0;
 var delay = 40;
 var bullets = new Array();
-
-function coolDown(){
-	if(shootCoolDown > 0){
-		shootCoolDown--;
-	}
-}
 
 function canShoot(){
 	if(shootCoolDown == 0){
@@ -253,7 +230,30 @@ requestAnimationFrame = w.requestAnimationFrame
 hero.x = 1500;
 hero.y = 1500;
 
-//hero.friends.push(new friend(hero.x-40, hero.y-40, 12, hero));
+hero.friends.push(new friend(hero.x-40, hero.y-40, 12, hero, 0.5));
+hero.friends.push(new friend(hero.x+40, hero.y+40, 12, hero, 0.5));
+hero.friends.push(new friend(hero.x-20, hero.y-60, 12, hero, 0.5));
+hero.friends.push(new friend(hero.x+20, hero.y+60, 12, hero, 0.5));
+hero.friends.push(new friend(hero.x, hero.y-40, 12, hero, 0.5));
+hero.friends.push(new friend(hero.x, hero.y+40, 12, hero, 0.5));
+hero.friends.push(new friend(hero.x-40, hero.y-40, 12, hero, 0.5));
+hero.friends.push(new friend(hero.x+40, hero.y+40, 12, hero, 0.5));
+hero.friends.push(new friend(hero.x-20, hero.y-60, 12, hero, 0.5));
+hero.friends.push(new friend(hero.x+20, hero.y+60, 12, hero, 0.5));
+hero.friends.push(new friend(hero.x, hero.y-40, 12, hero, 0.5));
+hero.friends.push(new friend(hero.x, hero.y+40, 12, hero, 0.5));
+hero.friends.push(new friend(hero.x-40, hero.y-40, 12, hero, 0.5));
+hero.friends.push(new friend(hero.x+40, hero.y+40, 12, hero, 0.5));
+hero.friends.push(new friend(hero.x-20, hero.y-60, 12, hero, 0.5));
+hero.friends.push(new friend(hero.x+20, hero.y+60, 12, hero, 0.5));
+hero.friends.push(new friend(hero.x, hero.y-40, 12, hero, 0.5));
+hero.friends.push(new friend(hero.x, hero.y+40, 12, hero, 0.5));
+hero.friends.push(new friend(hero.x-40, hero.y-40, 12, hero, 0.5));
+hero.friends.push(new friend(hero.x+40, hero.y+40, 12, hero, 0.5));
+hero.friends.push(new friend(hero.x-20, hero.y-60, 12, hero, 0.5));
+hero.friends.push(new friend(hero.x+20, hero.y+60, 12, hero, 0.5));
+hero.friends.push(new friend(hero.x, hero.y-40, 12, hero, 0.5));
+hero.friends.push(new friend(hero.x, hero.y+40, 12, hero, 0.5));
 
 var then = Date.now();
 init();
